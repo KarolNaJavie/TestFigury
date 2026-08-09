@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: figures
+  datasource:
+    url: jdbc:mysql://localhost:3306/figures_schema
+    username: root
+    password: root
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
