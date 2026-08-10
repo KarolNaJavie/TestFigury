@@ -5,10 +5,10 @@ import com.figures.figures.models.FigureDTO;
 import com.figures.figures.models.FilterRequest;
 import com.figures.figures.service.FigureService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +25,13 @@ public class FigureController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<FigureDTO> getAll(){
-        return figureService.getAll();
+    public Page<FigureDTO> getAll(Pageable pageable){
+        return figureService.getAll(pageable);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<FigureDTO> getFiltered(@RequestBody FilterRequest request){
-        return figureService.filter(request);
+    public Page<FigureDTO> getFiltered(@RequestBody FilterRequest request, Pageable pageable){
+        return figureService.filter(request, pageable);
     }
 }

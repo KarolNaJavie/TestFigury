@@ -1,9 +1,8 @@
 package com.figures.figures.models;
 
+import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
-
+@Builder
 @Data
 public class FilterRequest {
     private long id;
