@@ -1,5 +1,6 @@
 package com.figures.figures.service;
 
+import com.figures.figures.exceptions.UnknownFigureTypeException;
 import com.figures.figures.models.CreateFigureCommand;
 import com.figures.figures.models.Figure;
 import com.figures.figures.models.FigureDTO;
@@ -23,7 +24,12 @@ public class FigureService {
     private final Map<String, CreateFigureStrategy> createFigureStrategies;
 
     public FigureDTO create(CreateFigureCommand command) {
-        CreateFigureStrategy strategy = createFigureStrategies.get(command.getType());
+        CreateFigureStrategy strategy = createFigureStrategies.get(command.getType().toUpperCase());
+        if (strategy == null) {
+            throw new UnknownFigureTypeException(
+                    "Unknown figure type: " + command.getType()
+            );
+        }
         return FigureDTO.fromEntity(figureRepository.save(strategy.create(command)));
     }
 
@@ -31,25 +37,45 @@ public class FigureService {
         return figureRepository.findAll(pageable).map(FigureDTO::fromEntity);
     }
 
-    public Page<FigureDTO> filter(FilterRequest request, Pageable pageable) {
-        if (request.getType() != null) {
-            return figureRepository.findAllByType(request.getType(), pageable)
-                    .map(FigureDTO::fromEntity);
-        } else if (request.getParameter() != null) {
-            Page<Figure> page = figureRepository.findAll(pageable);
+public Page<FigureDTO> filter(FilterRequest request, Pageable pageable) {
+    if (request.getType() != null) {
+        return figureRepository.findAllByType(request.getType(), pageable)
+                .map(FigureDTO::fromEntity);
 
-            List<FigureDTO> filtered = page.getContent().stream()
-                    .filter(n -> n.getParameters().containsKey(request.getParameter()))
-                    .map(FigureDTO::fromEntity)
-                    .toList();
+    } else if (request.getParameter() != null && request.getValue() != null) {
+        Page<Figure> page = figureRepository.findAll(pageable);
 
-            return new PageImpl<>(
-                    filtered,
-                    pageable,
-                    filtered.size()
-            );
-        } else {
-            return figureRepository.findAll(pageable).map(FigureDTO::fromEntity);
-        }
+        List<FigureDTO> filtered = page.getContent().stream()
+                .filter(n -> request.getValue().equals(
+                        n.getParameters().get(request.getParameter())
+                ))
+                .map(FigureDTO::fromEntity)
+                .toList();
+
+        return new PageImpl<>(
+                filtered,
+                pageable,
+                filtered.size()
+        );
+
+    } else if (request.getParameter() != null) {
+        Page<Figure> page = figureRepository.findAll(pageable);
+
+        List<FigureDTO> filtered = page.getContent().stream()
+                .filter(n -> n.getParameters().containsKey(request.getParameter()))
+                .map(FigureDTO::fromEntity)
+                .toList();
+
+        return new PageImpl<>(
+                filtered,
+                pageable,
+                filtered.size()
+        );
+
+    } else {
+        return figureRepository.findAll(pageable)
+                .map(FigureDTO::fromEntity);
     }
+}
+
 }

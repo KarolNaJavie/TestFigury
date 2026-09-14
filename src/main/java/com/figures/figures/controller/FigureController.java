@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/figures")
 public class FigureController {
+//Poprawki:
+
+
+//filter po parametrze: findAll(pageable) pobiera jedną stronę, a Ty filtrujesz ją w pamięci. Co się stanie, gdy pasujący rekord jest
+// na stronie 3, a pytam o stronę 0? I czy total w tym PageImpl będzie prawdziwy? Jak zrobić, żeby filtr działał na całej bazie, a nie
+// na jednej stronie? podpowiedz: Specification 😉
 
     private final FigureService figureService;
 
@@ -29,7 +35,7 @@ public class FigureController {
         return figureService.getAll(pageable);
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public Page<FigureDTO> getFiltered(@RequestBody FilterRequest request, Pageable pageable){
         return figureService.filter(request, pageable);
