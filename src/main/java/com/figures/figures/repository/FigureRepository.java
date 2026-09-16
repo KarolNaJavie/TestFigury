@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface FigureRepository extends JpaRepository<Figure, Long>, JpaSpecificationExecutor<Figure> {
-    Page<Figure> findAllByType(String type, Pageable pageable);
 }

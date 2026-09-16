@@ -2,10 +2,11 @@ package com.figures.figures.models;
 
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.Map;
+
 @Builder
 @Data
 public class FilterRequest {
-    private String type;
-    private String parameter;
-    private Double value;
+  private Map<String, String> params;
 }

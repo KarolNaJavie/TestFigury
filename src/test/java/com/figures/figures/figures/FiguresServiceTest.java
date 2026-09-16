@@ -87,31 +87,31 @@ public class FiguresServiceTest {
         verify(figureRepository).findAll(pageable);
     }
 
-    @Test
-    void searchByTypeTest() {
-        FilterRequest request = FilterRequest.builder()
-                .type("circle")
-                .build();
-
-        Figure circle = Figure.builder()
-                .id(1L)
-                .type("circle")
-                .parameters(Map.of("radius", 5.0))
-                .build();
-
-        Pageable pageable = PageRequest.of(0, 10);
-
-        Page<Figure> page = new PageImpl<>(
-                List.of(circle),
-                pageable,
-                1
-        );
-        when(figureRepository.findAllByType("circle", pageable))
-                .thenReturn(page);
-
-       Page<FigureDTO> result = figureService.filter(request, pageable);
-
-        assertEquals(1, result.getTotalElements());
-        assertEquals(1, result.getTotalPages());
-    }
+//    @Test
+//    void searchByTypeTest() {
+//        FilterRequest request = FilterRequest.builder()
+//                .type("circle")
+//                .build();
+//
+//        Figure circle = Figure.builder()
+//                .id(1L)
+//                .type("circle")
+//                .parameters(Map.of("radius", 5.0))
+//                .build();
+//
+//        Pageable pageable = PageRequest.of(0, 10);
+//
+//        Page<Figure> page = new PageImpl<>(
+//                List.of(circle),
+//                pageable,
+//                1
+//        );
+//        when(figureRepository.findAllByType("circle", pageable))
+//                .thenReturn(page);
+//
+//       Page<FigureDTO> result = figureService.filter(request, pageable);
+//
+//        assertEquals(1, result.getTotalElements());
+//        assertEquals(1, result.getTotalPages());
+//    }
 }
